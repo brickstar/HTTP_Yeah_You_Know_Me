@@ -12,8 +12,8 @@ class Response
   end
 
   def parse
-    @vpp = @request_lines.shift.split(" ") #array of [verb, path, protocol]
-    @hash = @request_lines.map {|key| key.split(": ")}.to_h # hash of rest of required lines
+    @vpp = @request_lines.shift.split(" ")
+    @hash = @request_lines.map {|key| key.split(": ")}.to_h
   end
 
   def debug_information

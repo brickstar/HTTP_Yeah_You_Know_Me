@@ -3,6 +3,8 @@ require 'pry'
 
 class Server
 
+attr_reader :request_lines
+
   def initialize
     @server        = TCPServer.new(9292)
     @request_lines = []
