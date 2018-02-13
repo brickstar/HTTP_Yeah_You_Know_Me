@@ -5,6 +5,7 @@ class Server
 
   def initialize
     @server        = TCPServer.new(9292)
+    @request_lines = []
     @request_count = 0
   end
 
@@ -13,12 +14,12 @@ class Server
       @client = @server.accept
 
       puts "Ready for a request"
-      request_lines = []
+      @request_lines = []
       while line = @client.gets and !line.chomp.empty?
-        request_lines << line.chomp
+        @request_lines << line.chomp
       end
       puts "Got this request:"
-      puts request_lines.inspect
+      puts @request_lines.inspect
 
 
       respond
@@ -42,6 +43,5 @@ class Server
     puts ["Wrote this response:", headers, output].join("\n")
     @client.close
     puts "\nResponse complete, exiting."
-
   end
 end
