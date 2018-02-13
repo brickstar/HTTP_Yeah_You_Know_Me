@@ -12,16 +12,10 @@ class Server
   def start
     loop do
       @client = @server.accept
-
-      puts "Ready for a request"
       @request_lines = []
       while line = @client.gets and !line.chomp.empty?
         @request_lines << line.chomp
       end
-      puts "Got this request:"
-      puts @request_lines.inspect
-
-
       respond
       @request_count += 1
     end
@@ -29,10 +23,9 @@ class Server
 
 
   def respond
-    puts "Sending response."
+    response = Response.new
     response = "<pre>" + "Hello World (#{@request_count})" + ("\n") + "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
-
     headers = ["http/1.1 200 ok",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",
@@ -42,6 +35,7 @@ class Server
     @client.puts output
     puts ["Wrote this response:", headers, output].join("\n")
     @client.close
-    puts "\nResponse complete, exiting."
   end
+
+
 end
