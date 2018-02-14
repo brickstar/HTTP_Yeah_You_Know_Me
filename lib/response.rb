@@ -67,7 +67,7 @@ class Response
     elsif @path == "/shutdown"
       "Total Requests: #{server.request_count}"
     else
-      "404"
+      "404 "
     end
   end
 
