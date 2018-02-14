@@ -66,6 +66,8 @@ class Response
       "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
     elsif @path == "/shutdown"
       "Total Requests: #{server.request_count}"
+    elsif @path.split("=")[0] == "/word_search?word"
+      word_search
     else
       "404 Not Found"
     end
@@ -84,5 +86,15 @@ class Response
       Accept: #{@accept}
       </pre>
     END
+  end
+
+  def word_search
+    word = @path.split("=")[1]
+    file = File.read("/usr/share/dict/words")
+    if file.include?"#{word}"
+      "#{word} is a known word."
+    else
+      "#{word} is not a known word."
+    end
   end
 end
