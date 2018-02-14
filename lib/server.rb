@@ -1,12 +1,16 @@
 require 'socket'
 require 'pry'
+require_relative 'response'
 
 class Server
 
-attr_reader :request_lines
+attr_reader :request_lines,
+            :request_count,
+            :client
 
   def initialize
     @server        = TCPServer.new(9292)
+    @response      = Response.new(self)
     @request_lines = []
     @request_count = 0
   end
@@ -18,26 +22,8 @@ attr_reader :request_lines
       while line = @client.gets and !line.chomp.empty?
         @request_lines << line.chomp
       end
-      respond
+      @response.respond
       @request_count += 1
     end
   end
-
-
-  def respond
-    response = Response.new
-    response = "<pre>" + "Hello World (#{@request_count})" + ("\n") + "</pre>"
-    output = "<html><head></head><body>#{response}</body></html>"
-    headers = ["http/1.1 200 ok",
-              "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-              "server: ruby",
-              "content-type: text/html; charset=iso-8859-1",
-              "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-    @client.puts headers
-    @client.puts output
-    puts ["Wrote this response:", headers, output].join("\n")
-    @client.close
-  end
-
-
 end

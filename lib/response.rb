@@ -1,3 +1,6 @@
+require_relative 'server'
+require 'pry'
+
 class Response
   attr_reader :verb,
               :path,
@@ -5,21 +8,36 @@ class Response
               :host,
               :port,
               :origin,
-              :accept
+              :accept,
+              :server
 
-  def initialize
-
+  def initialize(server)
+    @server = server
   end
 
+  def respond
+    response_1 = "<pre>" + "Hello #{diagnostics}" + ("\n") + "</pre>"
+    output = "<html><head></head><body>#{response_1}</body></html>"
+    headers = ["http/1.1 200 ok",
+              "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
+              "server: ruby",
+              "content-type: text/html; charset=iso-8859-1",
+              "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+    server.client.puts headers
+    server.client.puts output
+  end
+
+
   def parse
-    @vpp = @request_lines.shift.split(" ")
-    @hash = @request_lines.map {|key| key.split(": ")}.to_h
+    @verb_path_protocol = server.request_lines.shift.split(" ")
+    @hash = server.request_lines.map {|key| key.split(": ")}.to_h
   end
 
   def debug_information
-    @verb      = @vpp[0]
-    @path      = @vpp[1]
-    @protocol  = @vpp[2]
+    parse
+    @verb      = @verb_path_protocol[0]
+    @path      = @verb_path_protocol[1]
+    @protocol  = @verb_path_protocol[2]
     host_port  = @hash["Host"].split(":")
     @host      = host_port[0]
     @port      = host_port[1]
@@ -27,7 +45,22 @@ class Response
     @accept    = @hash["Accept"]
   end
 
-  def puts_diagnostics
+  # def response
+  #   if @path == "/"
+  #     diagnostics
+  #   elsif @path == "/hello"
+  #     "Hello, World!#{server.request_count}"
+  #   elsif @path == "datetime"
+  #     "#{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}"
+  #   elsif @path == "/shutdown"
+  #     "Total Requests: #{server.request_count}"
+  #   else
+  #     "404"
+  #   end
+  # end
+
+  def diagnostics
+    debug_information
     <<-END
       <pre>
       Verb: #{@verb}
