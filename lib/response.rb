@@ -29,13 +29,13 @@ class Response
   end
 
 
-  def parse
+  def split
     @verb_path_protocol = server.request_lines.shift.split(" ")
     @hash = server.request_lines.map {|key| key.split(": ")}.to_h
   end
 
   def debug_information
-    parse
+    split
     @verb      = @verb_path_protocol[0]
     @path      = @verb_path_protocol[1]
     @protocol  = @verb_path_protocol[2]
@@ -56,18 +56,18 @@ class Response
         Protocol: #{@protocol}
         Host: #{@host}
         Port: #{@port}
-        Origin: #{@origin}       11:07AM on Sunday, November 1, 2015
+        Origin: #{@origin}
         Accept: #{@accept}
         </pre>
-      END
+        END
     elsif @path == "/hello"
-      "Hello, World!#{server.request_count}"
+      " Hello, World! (#{server.request_count})"
     elsif @path == "/datetime"
       "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
     elsif @path == "/shutdown"
       "Total Requests: #{server.request_count}"
     else
-      "404"
+      "404 Not Found"
     end
   end
 

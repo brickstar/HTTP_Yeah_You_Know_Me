@@ -24,6 +24,7 @@ attr_reader :request_lines,
       end
       @response.respond
       @request_count += 1
+      puts @request_lines.inspect
     end
   end
 end
