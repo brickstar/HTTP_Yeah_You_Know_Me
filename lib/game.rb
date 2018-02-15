@@ -14,7 +14,7 @@ class Game
     @guess = nil
   end
 
-  def guess(user_guess)
+  def user_guess(user_guess)
     @guess = user_guess.gets.chomp.to_i
     @guesses << @guess
   end
@@ -37,4 +37,5 @@ class Game
       "You've guessed #{guesses.length} times. Your most recent
       guess was #{guesses.last}."
     end
+  end
 end

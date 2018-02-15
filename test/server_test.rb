@@ -9,6 +9,4 @@ class ServerTest < MiniTest::Test
 
     assert_instance_of Server, server
   end
-
-
 end

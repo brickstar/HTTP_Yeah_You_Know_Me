@@ -1,6 +1,7 @@
 require_relative 'server'
 require 'date'
 require 'pry'
+require './lib/game'
 
 class Response
   attr_reader :verb,
@@ -17,8 +18,7 @@ class Response
   end
 
   def respond
-    response_1 = "<pre>" + "#{response}" + ("\n") + "</pre>"
-    output = "<html><head></head><body>#{response_1}</body></html>"
+    output = "<html><head></head><body>\n<pre>\n#{response}\n</pre>\n</body></html>"
     headers = ["http/1.1 200 ok",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",
@@ -47,45 +47,25 @@ class Response
   end
 
   def response
-    diagnostics
+    debug_information
     if @path == "/"
-      <<-END
-        <pre>
-        Verb: #{@verb}
-        Path: #{@path}
-        Protocol: #{@protocol}
-        Host: #{@host}
-        Port: #{@port}
-        Origin: #{@origin}
-        Accept: #{@accept}
-        </pre>
-        END
+      "Verb: #{@verb}\nPath: #{@path}\nProtocol: #{@protocol}\nHost: #{@host}\nPort: #{@port}\nOrigin: #{@origin}\nAccept: #{@accept}"
     elsif @path == "/hello"
-      " Hello, World! (#{server.request_count})"
+      "Hello, World! (#{server.request_count})"
     elsif @path == "/datetime"
       "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
     elsif @path == "/shutdown"
       "Total Requests: #{server.request_count}"
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
+    elsif @path == "/start_game" && @verb == "POST"
+      @game = Game.new
+      "Good Luck!"
+    elsif @path == "/game" && @verb == "GET"
+
     else
       "404 Not Found"
     end
-  end
-
-  def diagnostics
-    debug_information
-    <<-END
-      <pre>
-      Verb: #{@verb}
-      Path: #{@path}
-      Protocol: #{@protocol}
-      Host: #{@host}
-      Port: #{@port}
-      Origin: #{@origin}
-      Accept: #{@accept}
-      </pre>
-    END
   end
 
   def word_search
