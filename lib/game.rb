@@ -15,26 +15,26 @@ attr_reader :guess,
   def user_guess(input)
     @guess = input
     @guesses << @guess
+    @guess
   end
 
   def gameplay
     puts @correct_number
-    if @guess == @correct_number
-      "Wow, you guessed it!"
-    elsif
-      @guess >= @correct_number
-      "Too high!"
+    if @guess > @correct_number
+      'Too high!'
+    elsif @guess <= @correct_number
+      'Too low!'
     else
-      "Too low!"
+      'Wow, you guessed it!'
     end
   end
 
   def game_information
     if @guesses.empty?
-      "Make a guess blablablabla"
+      "make a guess mf"
     else
-      "You've guessed #{guesses.length} times. Your most recent
-      guess was #{guesses.last}."
+      "You've guessed #{@guesses.length} times. Your most recent
+      guess was #{@guesses.last}."
     end
   end
 end

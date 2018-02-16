@@ -77,9 +77,11 @@ class Response
     if @path == "/start_game" && @verb == "POST"
       start_game
     elsif @path == "/game" && @verb == "POST"
-      shitty = client.read(@content_length).split[-2].to_i
-      @game.user_guess(shitty)
+      content_guess = client.read(@content_length).split[-2].to_i
+      @game.user_guess(content_guess)
       @game.gameplay
+    elsif @path == "/game" && @verb == "GET"
+      @game.game_information
     else
       "404 Not Found"
     end

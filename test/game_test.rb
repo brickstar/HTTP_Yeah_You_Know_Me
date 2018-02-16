@@ -22,13 +22,13 @@ class GameTest < Minitest::Test
     assert_equal 33, game.user_guess(33)
   end
 
-  def test_it_handles_high_guess
+  def test_it_handles_guesses
     game = Game.new
+    game.user_guess(-1)
 
-    assert_equal
+    assert_equal 'Too low!', game.gameplay
+
+    game.user_guess(101)
+    assert_equal 'Too high!', game.gameplay
   end
-
-  # def test_it_handles_low_guess
-  #   assert_equal "Too low!",
-  # end
 end
