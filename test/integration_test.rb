@@ -33,12 +33,6 @@ class IntegrationTest < MiniTest::Test
 
     assert_equal expected, response.body
   end
-  # def test_shutdown_path
-  #   response = Faraday.get 'http://127.0.0.1:9292/shutdown'
-  #   expected = "<html><head></head><body>\n<pre>\nTotal Requests: 41\n</pre>\n</body></html>"
-  #
-  #   assert response.body.include?("Total Requests:")
-  # end
 
   # def test_start_game_path
   #   response = Faraday.get 'http://127.0.0.1:9292/start_game'
