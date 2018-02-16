@@ -1,40 +1,38 @@
-require './lib/server'
-require './lib/response'
 require 'pry'
 
 
 class Game
-  attr_reader :guess,
-              :guesses,
-              :answer
+
+attr_reader :guess,
+            :correct_number,
+            :guesses
 
   def initialize
-    @answer = rand(100)
-    @guesses = []
     @guess = nil
+    @correct_number = rand(100)
+    @guesses = []
   end
 
-  def guess(user_guess)
-    @guess = user_guess.gets.chomp.to_i
+  def user_guess(input)
+    @guess = input
     @guesses << @guess
+    @guess
   end
 
-  def gameplay
-    if @guess == @answer
-      "Wow, you guessed it!"
-    elsif
-      @guess >= @answer
-      "Too high!"
+  def guess_eval
+    if @guess > @correct_number
+      'Too high!'
+    elsif @guess < @correct_number
+      'Too low!'
     else
-      "Too low!"
+      'Correct!!!'
     end
   end
 
   def game_information
-    if guesses.empty?
-      "Make a guess blablablabla"
-    else
-      "You've guessed #{guesses.length} times. Your most recent
-      guess was #{guesses.last}."
-    end
+    return "Please make a guess!" if @guesses.empty?
+
+    "Total guesses: #{@guesses.length}. Your most recent
+    guess was #{@guesses.last}. #{guess_eval}"
+  end
 end
