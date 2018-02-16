@@ -23,6 +23,7 @@ class Response
 
   def start_game
     Game.new
+    "Good Luck!"
   end
 
   def respond
@@ -41,8 +42,7 @@ class Response
     @hash = server.request_lines.map {|key| key.split(": ")}.to_h
   end
 
-  def debug_information
-    split
+  def parse_request_lines
     @verb      = @verb_path_protocol[0]
     @path      = @verb_path_protocol[1]
     @protocol  = @verb_path_protocol[2]
@@ -55,25 +55,46 @@ class Response
   end
 
   def response
-    debug_information
-    if @path == "/"
-      "Verb: #{@verb}\nPath: #{@path}\nProtocol: #{@protocol}\nHost: #{@host}\nPort: #{@port}\nOrigin: #{@origin}\nAccept: #{@accept}"
-    elsif @path == "/hello"
-      "Hello, World! (#{server.request_count})"
+    if @path == "/hello"
+      hello_path
     elsif @path == "/datetime"
-      "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
+      datetime_path
     elsif @path == "/shutdown"
-      "Total Requests: #{server.request_count}"
+      shutdown_path
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
-    elsif @path == "/start_game" && @verb == "POST"
-      start_game
-      "Good Luck!"
-      binding.pry
-    elsif @path == "/game" && @verb == "POST"
+    # elsif @path == "/start_game" && @verb == "POST"
+    #   start_game
+    # elsif @path == "/game" && @verb == "POST"
     else
       "404 Not Found"
     end
+  end
+
+  def game_handler
+    if @path == "/start_game" && @verb == "POST"
+      start_game
+    elsif @path == "/game" && @verb == "POST"
+
+    else
+      "404 Not Found"
+    end
+  end
+
+  def debug_information
+    "Verb: #{@verb}\nPath: #{@path}\nProtocol: #{@protocol}\nHost: #{@host}\nPort: #{@port}\nOrigin: #{@origin}\nAccept: #{@accept}"
+  end
+
+  def shutdown_path
+    "Total Requests: #{server.request_count}"
+  end
+
+  def hello_path
+    "Hello, World! (#{server.request_count})"
+  end
+
+  def datetime_path
+    "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
   end
 
 
