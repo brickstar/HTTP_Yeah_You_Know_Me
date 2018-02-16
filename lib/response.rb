@@ -15,16 +15,13 @@ class Response
 
   def initialize(server)
     @server = server
+    @game   = nil
   end
 
   def client
     @server.client
   end
 
-  def start_game
-    Game.new
-    "Good Luck!"
-  end
 
   def respond
     output = "<html><head></head><body>\n<pre>\n#{response}\n</pre>\n</body></html>"
@@ -37,12 +34,13 @@ class Response
     server.client.puts output
   end
 
-  def split
+  def split_request_lines
     @verb_path_protocol = server.request_lines.shift.split(" ")
     @hash = server.request_lines.map {|key| key.split(": ")}.to_h
   end
 
   def parse_request_lines
+    split_request_lines
     @verb      = @verb_path_protocol[0]
     @path      = @verb_path_protocol[1]
     @protocol  = @verb_path_protocol[2]
@@ -55,7 +53,9 @@ class Response
   end
 
   def response
-    if @path == "/hello"
+    if @path == "/"
+      debug_information
+    elsif @path == "/hello"
       hello_path
     elsif @path == "/datetime"
       datetime_path
@@ -63,19 +63,21 @@ class Response
       shutdown_path
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
-    # elsif @path == "/start_game" && @verb == "POST"
-    #   start_game
-    # elsif @path == "/game" && @verb == "POST"
     else
-      "404 Not Found"
+      game_handler
     end
+  end
+
+  def start_game
+    @game = Game.new
+    'Good Luck!'
   end
 
   def game_handler
     if @path == "/start_game" && @verb == "POST"
       start_game
     elsif @path == "/game" && @verb == "POST"
-
+      #stuff
     else
       "404 Not Found"
     end
@@ -97,7 +99,6 @@ class Response
     "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
   end
 
-
   def word_search
     word = @path.split("=")[1]
     file = File.read("/usr/share/dict/words")
@@ -108,6 +109,3 @@ class Response
     end
   end
 end
-
-# guess = server.request_lines.find {|body| body.include?('guess')}.split[-1]
-# game.user_guess(guess)

@@ -25,9 +25,11 @@ attr_reader :request_lines,
       while line = @client.gets and !line.chomp.empty?
         @request_lines << line.chomp
       end
+      @response.parse_request_lines
       @response.respond
       @request_count += 1
       puts @request_lines.inspect
+      break if @response.path == "/shutdown"
     end
   end
 end
