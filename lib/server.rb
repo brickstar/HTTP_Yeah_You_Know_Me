@@ -19,7 +19,7 @@ attr_reader :request_lines,
 
   def start
     loop do
-      puts "Ready for a Request"
+      puts "Ready for Request"
       @client = @server.accept
       @request_lines = []
       while line = @client.gets and !line.chomp.empty?

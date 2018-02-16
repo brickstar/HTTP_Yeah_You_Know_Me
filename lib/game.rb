@@ -4,7 +4,8 @@ require 'pry'
 class Game
 
 attr_reader :guess,
-            :correct_number
+            :correct_number,
+            :guesses
 
   def initialize
     @guess = nil

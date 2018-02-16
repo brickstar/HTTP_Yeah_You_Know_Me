@@ -16,6 +16,8 @@ class Response
   def initialize(server)
     @server = server
     @game   = nil
+    @status_code = nil
+    @location = nil
   end
 
   def client
@@ -25,11 +27,12 @@ class Response
 
   def respond
     output = "<html><head></head><body>\n<pre>\n#{response}\n</pre>\n</body></html>"
-    headers = ["http/1.1 200 ok",
+    headers = ["http/1.1 #{status_location}", #"#{response status location}"
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",
               "content-type: text/html; charset=iso-8859-1",
               "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+    puts headers
     server.client.puts headers
     server.client.puts output
   end
@@ -63,6 +66,8 @@ class Response
       get_shutdown
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
+    elsif @path == "/force_error"
+      force_error
     else
       game_handler
     end
@@ -79,7 +84,6 @@ class Response
     elsif @path == "/game" && @verb == "POST"
       content_guess = client.read(@content_length).split[-2].to_i
       @game.user_guess(content_guess)
-      "#{content_guess} submitted"
     elsif @path == "/game" && @verb == "GET"
       @game.game_information
     else
@@ -112,4 +116,27 @@ class Response
       "#{word.downcase} is not a known word."
     end
   end
+
+  def status_location
+    if @path == "/game" && @verb == "POST"
+      "302 Found,\nLocation: http://#{@host}:#{@port}/game"
+    elsif (@path == "/start_game" && @verb == "POST" && @game.guesses.empty?)
+      "301 Moved Permanently,\nLocation: http://#{@host}:#{@port}/game"
+    elsif @path == "/force_error"
+      "500 Internal Server Error"
+    elsif ["/", "/hello", "/datetime", "/game", "/shutdown"].include?(@path)
+      "200 OK"
+    elsif @path.split("=")[0] == "/word_search?word"
+      "200 OK"
+    else
+      "404 Not Found"
+    end
+  end
+
+  def force_error
+    raise "Busted!"
+  rescue StandardError => stack_trace
+    stack_trace.backtrace.join("\n")
+  end
+
 end
