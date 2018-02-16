@@ -17,6 +17,10 @@ class Response
     @server = server
   end
 
+  def start_game
+    Game.new
+  end
+
   def respond
     output = "<html><head></head><body>\n<pre>\n#{response}\n</pre>\n</body></html>"
     headers = ["http/1.1 200 ok",
@@ -27,7 +31,6 @@ class Response
     server.client.puts headers
     server.client.puts output
   end
-
 
   def split
     @verb_path_protocol = server.request_lines.shift.split(" ")
@@ -59,10 +62,11 @@ class Response
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
     elsif @path == "/start_game" && @verb == "POST"
-      @game = Game.new
+      start_game
       "Good Luck!"
-    elsif @path == "/game" && @verb == "GET"
-
+    elsif @path == "/game" && @verb == "POST"
+      guess = server.request_lines.find {|body| body.include?('guess')}.split[-1]
+      game.user_guess(guess)
     else
       "404 Not Found"
     end

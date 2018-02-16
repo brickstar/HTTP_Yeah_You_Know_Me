@@ -1,21 +1,19 @@
-require './lib/server'
-require './lib/response'
 require 'pry'
 
 
 class Game
-  attr_reader :guess,
-              :guesses,
-              :answer
+
+attr_reader :guess,
+            :correct_number
 
   def initialize
-    @answer = rand(100)
-    @guesses = []
     @guess = nil
+    @correct_number = rand(100)
+    @guesses = []
   end
 
-  def user_guess(user_guess)
-    @guess = user_guess.gets.chomp.to_i
+  def user_guess(input)
+    @guess = input.to_i
     @guesses << @guess
   end
 
@@ -31,7 +29,7 @@ class Game
   end
 
   def game_information
-    if guesses.empty?
+    if @guesses.empty?
       "Make a guess blablablabla"
     else
       "You've guessed #{guesses.length} times. Your most recent

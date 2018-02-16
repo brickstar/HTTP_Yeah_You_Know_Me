@@ -15,4 +15,14 @@ class GameTest < Minitest::Test
 
     assert_nil game.guess
   end
+
+  def test_it_can_take_a_guess
+    game = Game.new
+
+    assert_equal 33, game.user_guess("33")
+  end
+
+  # def test_it_handles_low_guess
+  #   assert_equal "Too low!",
+  # end
 end

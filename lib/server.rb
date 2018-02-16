@@ -1,12 +1,15 @@
 require 'socket'
 require 'pry'
 require_relative 'response'
+require './lib/game'
 
 class Server
 
 attr_reader :request_lines,
             :request_count,
-            :client
+            :client, :game
+
+# attr_accessor :game
 
   def initialize
     @server        = TCPServer.new(9292)
