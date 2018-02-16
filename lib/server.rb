@@ -7,9 +7,8 @@ class Server
 
 attr_reader :request_lines,
             :request_count,
-            :client, :game
-
-# attr_accessor :game
+            :client,
+            :game
 
   def initialize
     @server        = TCPServer.new(9292)

@@ -13,15 +13,16 @@ attr_reader :guess,
   end
 
   def user_guess(input)
-    @guess = input.to_i
+    @guess = input
     @guesses << @guess
   end
 
   def gameplay
-    if @guess == @answer
+    puts @correct_number
+    if @guess == @correct_number
       "Wow, you guessed it!"
     elsif
-      @guess >= @answer
+      @guess >= @correct_number
       "Too high!"
     else
       "Too low!"
