@@ -18,23 +18,20 @@ attr_reader :guess,
     @guess
   end
 
-  def gameplay
-    puts @correct_number
+  def guess_eval
     if @guess > @correct_number
       'Too high!'
     elsif @guess < @correct_number
       'Too low!'
     else
-      'Congrats!!!'
+      'Correct!!!'
     end
   end
 
   def game_information
-    if @guesses.empty?
-      "make a guess mf"
-    else
-      "You've guessed #{@guesses.length} times. Your most recent
-      guess was #{@guesses.last}."
-    end
+    return "Please make a guess!" if @guesses.empty?
+
+    "Total guesses: #{@guesses.length}. Your most recent
+    guess was #{@guesses.last}. #{guess_eval}"
   end
 end

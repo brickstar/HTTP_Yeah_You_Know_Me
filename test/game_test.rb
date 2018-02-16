@@ -26,9 +26,9 @@ class GameTest < Minitest::Test
     game = Game.new
     game.user_guess(-1)
 
-    assert_equal 'Too low!', game.gameplay
+    assert_equal 'Too low!', game.guess_eval
 
     game.user_guess(101)
-    assert_equal 'Too high!', game.gameplay
+    assert_equal 'Too high!', game.guess_eval
   end
 end

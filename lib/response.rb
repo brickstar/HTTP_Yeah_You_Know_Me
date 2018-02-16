@@ -75,12 +75,11 @@ class Response
 
   def game_handler
     if @path == "/start_game" && @verb == "POST"
-      binding.pry
       start_game
     elsif @path == "/game" && @verb == "POST"
       content_guess = client.read(@content_length).split[-2].to_i
       @game.user_guess(content_guess)
-      @game.gameplay
+      "#{content_guess} submitted"
     elsif @path == "/game" && @verb == "GET"
       @game.game_information
     else
