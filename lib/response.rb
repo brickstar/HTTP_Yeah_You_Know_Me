@@ -56,11 +56,11 @@ class Response
     if @path == "/"
       debug_information
     elsif @path == "/hello"
-      hello_path
+      get_hello
     elsif @path == "/datetime"
-      datetime_path
+      get_datetime
     elsif @path == "/shutdown"
-      shutdown_path
+      get_shutdown
     elsif @path.split("=")[0] == "/word_search?word"
       word_search
     else
@@ -75,6 +75,7 @@ class Response
 
   def game_handler
     if @path == "/start_game" && @verb == "POST"
+      binding.pry
       start_game
     elsif @path == "/game" && @verb == "POST"
       content_guess = client.read(@content_length).split[-2].to_i
@@ -91,25 +92,25 @@ class Response
     "Verb: #{@verb}\nPath: #{@path}\nProtocol: #{@protocol}\nHost: #{@host}\nPort: #{@port}\nOrigin: #{@origin}\nAccept: #{@accept}"
   end
 
-  def shutdown_path
-    "Total Requests: #{server.request_count}"
-  end
-
-  def hello_path
+  def get_hello
     "Hello, World! (#{server.request_count})"
   end
 
-  def datetime_path
+  def get_datetime
     "#{Time.now.strftime('%l:%M %p on %A, %B %d, %C%y')}"
+  end
+
+  def get_shutdown
+    "Total Requests: #{server.request_count}"
   end
 
   def word_search
     word = @path.split("=")[1]
     file = File.read("/usr/share/dict/words")
-    if file.include?"#{word}"
-      "#{word} is a known word."
+    if file.include?"#{word.downcase}"
+      "#{word.downcase} is a known word."
     else
-      "#{word} is not a known word."
+      "#{word.downcase} is not a known word."
     end
   end
 end

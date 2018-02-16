@@ -22,10 +22,10 @@ attr_reader :guess,
     puts @correct_number
     if @guess > @correct_number
       'Too high!'
-    elsif @guess <= @correct_number
+    elsif @guess < @correct_number
       'Too low!'
     else
-      'Wow, you guessed it!'
+      'Congrats!!!'
     end
   end
 

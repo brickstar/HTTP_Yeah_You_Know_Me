@@ -19,6 +19,7 @@ attr_reader :request_lines,
 
   def start
     loop do
+      puts "Ready for a Request"
       @client = @server.accept
       @request_lines = []
       while line = @client.gets and !line.chomp.empty?
@@ -27,6 +28,8 @@ attr_reader :request_lines,
       @response.parse_request_lines
       @response.respond
       @request_count += 1
+
+      puts 'Got this Request:'
       puts @request_lines.inspect
       break if @response.path == "/shutdown"
     end
