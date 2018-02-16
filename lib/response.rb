@@ -24,7 +24,6 @@ class Response
     @server.client
   end
 
-
   def respond
     output = "<html><head></head><body>\n<pre>\n#{response}\n</pre>\n</body></html>"
     headers = ["http/1.1 #{status_location}", #"#{response status location}"
@@ -138,5 +137,4 @@ class Response
   rescue StandardError => stack_trace
     stack_trace.backtrace.join("\n")
   end
-
 end
