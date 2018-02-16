@@ -17,6 +17,10 @@ class Response
     @server = server
   end
 
+  def client
+    @server.client
+  end
+
   def start_game
     Game.new
   end
@@ -47,6 +51,7 @@ class Response
     @port      = host_port[1]
     @origin    = @host
     @accept    = @hash["Accept"]
+    @content_length = @hash["Content-Length"].to_i
   end
 
   def response
@@ -64,13 +69,13 @@ class Response
     elsif @path == "/start_game" && @verb == "POST"
       start_game
       "Good Luck!"
+      binding.pry
     elsif @path == "/game" && @verb == "POST"
-      guess = server.request_lines.find {|body| body.include?('guess')}.split[-1]
-      game.user_guess(guess)
     else
       "404 Not Found"
     end
   end
+
 
   def word_search
     word = @path.split("=")[1]
@@ -82,3 +87,6 @@ class Response
     end
   end
 end
+
+# guess = server.request_lines.find {|body| body.include?('guess')}.split[-1]
+# game.user_guess(guess)
