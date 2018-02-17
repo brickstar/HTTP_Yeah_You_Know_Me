@@ -25,7 +25,7 @@ class Response
   end
 
   def respond
-    output = "<html><head></head><body>\n<pre>\n#{response}\n\n#{status_location\}</pre>\n</body></html>"
+    output = "<html><head></head><body>\n<pre>\n#{response}\n\n#{status_location}</pre>\n</body></html>"
     headers = ["http/1.1 #{status_location}", #"#{response status location}"
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",

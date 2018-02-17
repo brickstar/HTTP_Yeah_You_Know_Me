@@ -7,7 +7,7 @@ class Server
 
 attr_reader :request_lines,
             :request_count,
-            :client,  
+            :client,
             :game
 
   def initialize
