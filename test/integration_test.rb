@@ -33,13 +33,4 @@ class IntegrationTest < MiniTest::Test
 
     assert_equal expected, response.body
   end
-
-  # def test_start_game_path
-  #   response = Faraday.get 'http://127.0.0.1:9292/start_game'
-  # end
-  #
-  # def test_game_path
-  #   response = Faraday.get 'http://127.0.0.1:9292/game'
-  # end
-  #
 end
